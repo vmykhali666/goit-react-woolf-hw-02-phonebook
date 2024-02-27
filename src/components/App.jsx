@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ContactForm } from "./ContactForm/ContactForm";
-import { ContactList } from "./ContactList/ContactList";
-import { Section } from "./Section/Section";
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
+import { Section } from './Section/Section';
 import { Filter } from './Filter/Filter';
 
 export class App extends Component {
@@ -13,28 +13,36 @@ export class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-  }
+  };
 
   handleFilterChange = e => {
     this.setState({ filter: e.target.value });
-  }
+  };
 
-  onAddContact = (newContact) => {
+  onAddContact = newContact => {
     if (this.state.contacts.some(contact => contact.name === newContact.name)) {
       alert(`${newContact.name} is already in contacts`);
       return;
     }
 
     this.setState(({ contacts }) => ({
-      contacts: [newContact, ...contacts]
+      contacts: [newContact, ...contacts],
     }));
-  }
+  };
 
-  onRemoveContact = (id) => {
+  onRemoveContact = id => {
     this.setState(({ contacts }) => ({
-      contacts: contacts.filter(contact => contact.id !== id)
+      contacts: contacts.filter(contact => contact.id !== id),
     }));
-  }
+  };
+
+  getFilteredContacts = () => {
+    return this.state.filter !== ''
+      ? this.state.contacts.filter(contact =>
+          contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+        )
+      : this.state.contacts;
+  };
 
   render() {
     return (
@@ -46,23 +54,21 @@ export class App extends Component {
           justifyContent: 'center',
           alignItems: 'center',
           fontSize: 20,
-          color: '#010101'
+          color: '#010101',
         }}
       >
         <Section title="Phone Book">
-          <ContactForm onAddContact={this.onAddContact}/>
+          <ContactForm onAddContact={this.onAddContact} />
         </Section>
         <Section title="Contacts">
-          <Filter filter={this.state.filter} onFilterChange={this.handleFilterChange}/>
-          <ContactList 
-          contacts={ this.state.filter !== '' ? 
-          this.state.contacts.filter(contact =>
-            contact.name
-              .toLowerCase()
-              .includes(this.state.filter.toLowerCase())
-          ) : this.state.contacts
-          }
-          onRemove={this.onRemoveContact} />
+          <Filter
+            filter={this.state.filter}
+            onFilterChange={this.handleFilterChange}
+          />
+          <ContactList
+            contacts={this.getFilteredContacts()}
+            onRemove={this.onRemoveContact}
+          />
         </Section>
       </div>
     );
