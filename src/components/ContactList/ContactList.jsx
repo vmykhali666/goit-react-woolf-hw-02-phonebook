@@ -2,7 +2,7 @@ import React from 'react';
 import { Notification } from 'components/Notification/Notification';
 import styles from "styles/ContactList.module.css";
 
-export function ContactList({ contacts, onRemove }) {
+export const ContactList = ({ contacts, onRemove }) => {
   return (
     <ul className={styles.contactsList}>
       {contacts.length > 0 ? (
