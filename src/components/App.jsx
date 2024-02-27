@@ -3,6 +3,7 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Section } from './Section/Section';
 import { Filter } from './Filter/Filter';
+import { Notification } from './Notification/Notification';
 
 export class App extends Component {
   state = {
@@ -20,7 +21,7 @@ export class App extends Component {
   };
 
   onAddContact = newContact => {
-    if (this.state.contacts.some(contact => contact.name === newContact.name)) {
+    if (this.state.contacts.some(contact => contact.name.toLowerCase() === newContact.name.toLowerCase())) {
       alert(`${newContact.name} is already in contacts`);
       return;
     }
@@ -45,6 +46,8 @@ export class App extends Component {
   };
 
   render() {
+    let filtered = this.getFilteredContacts();
+
     return (
       <div
         style={{
@@ -65,10 +68,16 @@ export class App extends Component {
             filter={this.state.filter}
             onFilterChange={this.handleFilterChange}
           />
-          <ContactList
-            contacts={this.getFilteredContacts()}
-            onRemove={this.onRemoveContact}
-          />
+          { 
+            filtered.length > 0 ? (
+              <ContactList
+                contacts={filtered}
+                onRemove={this.onRemoveContact}
+              />
+            ) : (
+              <Notification message="No contacts found" />
+            ) 
+          }
         </Section>
       </div>
     );
